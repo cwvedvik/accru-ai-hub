@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Accru AI Hub — Design System (v0.3)</title>
+<meta name="description" content="Interactive style guide for the Accru AI Hub. Brand tokens, typography, components and patterns for developer handoff." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gelasio:ital,wght@0,400;0,500;0,600;1,400&family=Raleway:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@7.2.3/css/flag-icons.min.css" />
+<script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+<style>
+  :root{
+    /* Surfaces */
+    --canvas:#e8e4db; --surface:#ffffff; --surface-sunken:#dfdad0;
+    /* Brand */
+    --brand-red:#722322; --brand-orange:#dc6834;
+    /* Accessible action family */
+    --action:#b8501c; --action-hover:#a2461a; --action-press:#8c3d16;
+    /* Text + lines */
+    --ink:#2b2523; --ink-muted:#6f6659; --rule:#d5cfc2;
+    --tint-red:#a04a3a; --tint-orange:#e89468;
+    /* Semantic */
+    --success:#3d6b4a; --success-bg:#e6ece6;
+    --warning:#8a6a1f; --warning-bg:#f0e9d6;
+    --danger:#8f2f2b;  --danger-bg:#f2e2e0;
+    /* Spacing (4px scale) */
+    --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
+    --space-6:32px; --space-7:48px; --space-8:64px; --space-9:80px;
+    /* Radius */
+    --r-card:8px; --r-control:6px; --r-badge:4px;
+    /* Elevation */
+    --e0:none;
+    --e1:0 1px 2px rgba(43,37,35,.06), 0 4px 12px rgba(43,37,35,.04);
+    --e2:0 2px 4px rgba(43,37,35,.08), 0 8px 24px rgba(43,37,35,.06);
+    --e3:0 8px 16px rgba(43,37,35,.10), 0 24px 48px rgba(43,37,35,.10);
+    --scrim:rgba(43,37,35,.32);
+    /* Motion */
+    --dur-fast:120ms; --dur-base:180ms; --dur-slow:240ms;
+    --ease-out:cubic-bezier(.2,0,0,1); --ease-in-out:cubic-bezier(.4,0,.2,1);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--canvas); color:var(--ink);
+    font-family:"Raleway",Calibri,Arial,sans-serif; font-size:16px; line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{font-family:"Gelasio",Georgia,serif; color:var(--brand-red); margin:0; line-height:1.2;}
+  .num{font-variant-numeric:tabular-nums; font-feature-settings:"tnum" 1;}
+  a{color:var(--action); text-decoration:underline; text-underline-offset:2px;}
+  a:hover{color:var(--action-hover);}
+  code,kbd{font-family:"JetBrains Mono",monospace; font-size:.85em;}
+  code{background:var(--surface-sunken); padding:2px 6px; border-radius:var(--r-badge);}
+
+  /* Focus: two-tone ring, focus-visible only */
+  :focus-visible{outline:none; box-shadow:0 0 0 2px var(--surface), 0 0 0 4px var(--action);}
+  .on-canvas :focus-visible{box-shadow:0 0 0 2px var(--canvas), 0 0 0 4px var(--action);}
+
+  /* ---------- Shell ---------- */
+  .shell{display:grid; grid-template-columns:248px minmax(0,1fr); min-height:100vh;}
+  .rail{
+    position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
+    background:var(--brand-red); color:#f3e7df; padding:var(--space-5) var(--space-4);
+  }
+  .rail .brand{display:flex; align-items:baseline; gap:8px; margin-bottom:var(--space-2);}
+  .rail .brand b{font-family:"Gelasio",serif; color:#fff; font-weight:600; font-size:1.05rem;}
+  .rail .brand span{font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:#e6b9a6;}
+  .rail .ver{font-size:.72rem; color:#e0a892; margin-bottom:var(--space-5); letter-spacing:.02em;}
+  .rail nav a{display:block; color:#f0dcd2; text-decoration:none; font-size:.9rem;
+    padding:7px 10px; border-radius:var(--r-control); margin-bottom:2px; transition:background var(--dur-fast) var(--ease-out);}
+  .rail nav a:hover{background:rgba(255,255,255,.08); color:#fff;}
+  .rail nav a.active{background:rgba(255,255,255,.14); color:#fff; box-shadow:inset 3px 0 0 var(--brand-orange);}
+  .rail .foot{margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid rgba(255,255,255,.15); font-size:.78rem; color:#e0a892;}
+  .rail .foot a{color:#f6d9cb;}
+
+  main{padding:var(--space-7) var(--space-7); max-width:1120px;}
+  section{margin-bottom:var(--space-9); scroll-margin-top:var(--space-5);}
+  .eyebrow{font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--action); font-weight:600; margin-bottom:var(--space-2);}
+  h1.page{font-size:2.25rem; letter-spacing:-.01em; line-height:1.15;}
+  .lede{font-size:1.125rem; color:var(--ink-muted); max-width:68ch; margin-top:var(--space-3);}
+  h2{font-size:1.75rem; letter-spacing:-.01em; margin-bottom:var(--space-2);}
+  h3{font-size:1.375rem; letter-spacing:-.005em; margin:var(--space-6) 0 var(--space-3);}
+  .sub{color:var(--ink-muted); max-width:68ch; margin-bottom:var(--space-5);}
+  .hr{height:1px; background:var(--rule); border:0; margin:var(--space-7) 0;}
+
+  .card{background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card); box-shadow:var(--e1);}
+  .pad{padding:var(--space-5);}
+  .grid{display:grid; gap:var(--space-5);}
+  .cols-2{grid-template-columns:repeat(2,1fr);} .cols-3{grid-template-columns:repeat(3,1fr);}
+  .cols-4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:900px){.cols-2,.cols-3,.cols-4{grid-template-columns:1fr 1fr;}}
+  @media(max-width:600px){.shell{grid-template-columns:1fr;} .rail{position:static;height:auto;} main{padding:var(--space-5);} .cols-2,.cols-3,.cols-4{grid-template-columns:1fr;}}
+
+  /* Swatches */
+  .swatch{border:1px solid var(--rule); border-radius:var(--r-card); overflow:hidden; background:var(--surface);}
+  .swatch .chip{height:72px;}
+  .swatch .meta{padding:var(--space-3); font-size:.8rem;}
+  .swatch .meta b{display:block; font-size:.85rem; color:var(--ink);}
+  .swatch .meta .hex{color:var(--ink-muted);} 
+
+  table{width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card); overflow:hidden;}
+  th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--rule); font-size:.9rem;}
+  th{background:var(--surface-sunken); color:var(--ink); font-weight:600; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase;}
+  tr:last-child td{border-bottom:0;}
+  td .samp{font-family:"Gelasio",serif; color:var(--ink);}
+
+  /* Buttons */
+  .btn{font-family:inherit; font-size:.95rem; font-weight:600; border:0; cursor:pointer;
+    border-radius:var(--r-control); padding:11px 18px; transition:background var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);}
+  .btn-primary{background:var(--action); color:#fff;}
+  .btn-primary:hover{background:var(--action-hover);} .btn-primary:active{background:var(--action-press); transform:translateY(1px);}
+  .btn-secondary{background:var(--surface); color:var(--ink); border:1px solid var(--rule);}
+  .btn-secondary:hover{border-color:var(--ink-muted);}
+  .btn-ghost{background:transparent; color:var(--action); padding:11px 12px;}
+  .btn-ghost:hover{background:rgba(184,80,28,.08);}
+  .btn:disabled{opacity:.45; cursor:not-allowed;}
+
+  /* Badges + chips */
+  .badge{display:inline-flex; align-items:center; gap:5px; font-size:.7rem; font-weight:600; letter-spacing:.06em;
+    text-transform:uppercase; padding:3px 8px; border-radius:var(--r-badge);}
+  .k-app{background:#efe0d8; color:#8a4326;} .k-agent{background:#e2e7e2; color:#3d6b4a;}
+  .k-skill{background:#e7e1ee; color:#5b4a78;} .k-prompt{background:#f0e9d6; color:#7a6320;}
+  .k-training{background:#e0e6ec; color:#3a5566;}
+  .chip{display:inline-flex; align-items:center; gap:6px; font-size:.78rem; color:var(--ink-muted);
+    background:var(--surface-sunken); padding:4px 9px; border-radius:var(--r-badge);}
+  .chip-filter{background:var(--action); color:#fff; cursor:pointer;}
+  .chip-filter i{opacity:.85;}
+
+  .health{display:inline-flex; align-items:center; gap:6px; font-size:.78rem;}
+  .dot{width:8px; height:8px; border-radius:50%;}
+  .d-ok{background:var(--success);} .d-warn{background:var(--warning);} .d-down{background:var(--danger);}
+  .pill{display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:100px; font-size:.78rem; font-weight:600;}
+  .p-ok{background:var(--success-bg); color:var(--success);}
+  .p-warn{background:var(--warning-bg); color:var(--warning);}
+  .p-down{background:var(--danger-bg); color:var(--danger);}
+
+  /* Asset card */
+  .asset{background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card); box-shadow:var(--e1);
+    padding:var(--space-5); display:flex; flex-direction:column; gap:var(--space-3);
+    transition:box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out); cursor:pointer;}
+  .asset:hover{box-shadow:var(--e2); transform:translateY(-2px);}
+  .asset:hover .a-title{text-decoration:underline; text-underline-offset:2px;}
+  .asset .a-top{display:flex; justify-content:space-between; align-items:center;}
+  .asset .a-rate{font-size:.8rem; color:var(--ink-muted); display:flex; align-items:center; gap:4px;}
+  .asset .a-rate i{color:var(--brand-orange);}
+  .a-title{font-family:"Gelasio",serif; font-size:1.125rem; color:var(--brand-red); line-height:1.3;}
+  .a-sum{font-size:.9rem; color:var(--ink); line-height:1.45;}
+  .a-meta{display:flex; flex-wrap:wrap; gap:6px;}
+  .a-foot{border-top:1px solid var(--rule); padding-top:var(--space-3); font-size:.75rem; color:var(--ink-muted); display:flex; flex-direction:column; gap:2px;}
+  .a-foot .by b{color:var(--ink); font-weight:600;}
+  .asset.degraded{opacity:.6;}
+
+  /* Scope bar */
+  .scopebar{background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card); box-shadow:var(--e1);
+    display:flex; gap:var(--space-4); align-items:center; padding:var(--space-3) var(--space-4); flex-wrap:wrap;}
+  .selectish{position:relative;}
+  .selectish>button{display:inline-flex; align-items:center; gap:8px; background:var(--surface-sunken); border:1px solid var(--rule);
+    border-radius:var(--r-control); padding:8px 12px; font:inherit; font-size:.9rem; color:var(--ink); cursor:pointer;}
+  .selectish .menu{position:absolute; top:calc(100% + 6px); left:0; min-width:220px; background:var(--surface);
+    border:1px solid var(--rule); border-radius:var(--r-card); box-shadow:var(--e2); padding:6px; z-index:20;
+    opacity:0; transform:translateY(-4px); pointer-events:none; transition:opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);}
+  .selectish.open .menu{opacity:1; transform:none; pointer-events:auto;}
+  .selectish .menu button{display:flex; justify-content:space-between; width:100%; background:none; border:0; font:inherit; font-size:.88rem;
+    color:var(--ink); text-align:left; padding:8px 10px; border-radius:var(--r-control); cursor:pointer;}
+  .selectish .menu button:hover{background:var(--surface-sunken);}
+  .selectish .menu button.sel{color:var(--action); font-weight:600;}
+  .selectish .menu button .c{color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+  .selectish .menu button.zero{color:var(--ink-muted);}
+  .scope-lbl{font-size:.78rem; color:var(--ink-muted);}
+
+  /* Search */
+  .search{display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--rule);
+    border-radius:var(--r-control); padding:0 12px; height:44px; max-width:460px;}
+  .search input{border:0; outline:0; font:inherit; flex:1; background:transparent; color:var(--ink);}
+  .search .k{font-size:.72rem; color:var(--ink-muted); border:1px solid var(--rule); border-radius:var(--r-badge); padding:2px 6px;}
+  .search i{color:var(--ink-muted);}
+
+  /* Facet */
+  .facet label{display:flex; align-items:center; justify-content:space-between; padding:7px 4px; font-size:.9rem; cursor:pointer; border-radius:var(--r-control);}
+  .facet label:hover{background:var(--surface-sunken);}
+  .facet input{accent-color:var(--action); margin-right:8px;}
+  .facet .c{color:var(--ink-muted); font-variant-numeric:tabular-nums; font-size:.82rem;}
+
+  /* Data panel */
+  .dp{background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card);}
+  .dp .row{display:flex; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--rule); font-size:.88rem;}
+  .dp .row:last-child{border-bottom:0;}
+  .dp .row .lbl{color:var(--ink-muted);} .dp .row .val{color:var(--ink); font-variant-numeric:tabular-nums;}
+  .dp .hd{font-family:"Gelasio",serif; color:var(--brand-red); font-size:1rem; padding:12px 16px; border-bottom:1px solid var(--rule);}
+
+  /* Elevation demo */
+  .elev{height:96px; border-radius:var(--r-card); background:var(--surface); border:1px solid var(--rule);
+    display:flex; align-items:center; justify-content:center; font-size:.82rem; color:var(--ink-muted);}
+
+  /* Spacing demo */
+  .sp-row{display:flex; align-items:center; gap:14px; margin-bottom:8px; font-size:.82rem; color:var(--ink-muted);}
+  .sp-bar{background:var(--tint-orange); height:16px; border-radius:2px;}
+
+  /* Type scale */
+  .ts-row{display:flex; align-items:baseline; gap:18px; padding:12px 0; border-bottom:1px solid var(--rule);}
+  .ts-row .tag{width:118px; flex:none; font-size:.72rem; color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+
+  /* Motion demo */
+  .drawer{overflow:hidden; height:0; opacity:0; transition:height var(--dur-base) var(--ease-out), opacity var(--dur-base) var(--ease-out);}
+  .drawer.open{height:120px; opacity:1;}
+
+  /* Data viz */
+  .dv-scale{display:flex; border-radius:var(--r-badge); overflow:hidden; border:1px solid var(--rule);}
+  .dv-scale span{flex:1; height:40px; display:flex; align-items:end; justify-content:center; font-size:.62rem; color:#fff; padding-bottom:3px;}
+  .bars{display:flex; align-items:end; gap:14px; height:160px; padding:var(--space-4); background:var(--surface); border:1px solid var(--rule); border-radius:var(--r-card);}
+  .bars .bar{width:44px; border-radius:4px 4px 0 0; position:relative;}
+  .bars .bar span{position:absolute; bottom:-20px; left:0; right:0; text-align:center; font-size:.72rem; color:var(--ink-muted); font-variant-numeric:tabular-nums;}
+  .funnel{display:flex; flex-direction:column; gap:6px;}
+  .funnel .seg{height:34px; border-radius:4px; color:#fff; display:flex; align-items:center; padding:0 12px; font-size:.82rem;}
+
+  .note{background:var(--warning-bg); border:1px solid #e4d3a8; border-radius:var(--r-control); padding:var(--space-3) var(--space-4); font-size:.85rem; color:#5f4a12;}
+  .caption{font-size:.78rem; color:var(--ink-muted); margin-top:var(--space-2);}
+  .kbd-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .tag-list{display:flex; flex-wrap:wrap; gap:8px;}
+
+  @media(prefers-reduced-motion:reduce){
+    *{transition-duration:.001ms !important;} html{scroll-behavior:auto;}
+    .asset:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside class="rail on-canvas">
+    <div class="brand"><b>accru</b><span>AI Hub</span></div>
+    <div class="ver">Design System · v0.3</div>
+    <nav id="nav">
+      <a href="#overview">Overview</a>
+      <a href="#color">Color</a>
+      <a href="#type">Typography</a>
+      <a href="#spacing">Spacing &amp; grid</a>
+      <a href="#elevation">Elevation</a>
+      <a href="#motion">Motion</a>
+      <a href="#icons">Iconography</a>
+      <a href="#buttons">Buttons</a>
+      <a href="#scope">Scope bar</a>
+      <a href="#components">Components</a>
+      <a href="#assetcard">Asset card</a>
+      <a href="#dataviz">Data viz</a>
+      <a href="#a11y">Accessibility</a>
+    </nav>
+    <div class="foot">
+      Specs:<br/>
+      <a href="../accru-ai-hub-ux-spec.md">UX &amp; interface spec</a><br/>
+      <a href="../accru-ai-hub-technical-architecture.md">Technical architecture</a>
+    </div>
+  </aside>
+
+  <main>
+    <section id="overview">
+      <div class="eyebrow">Accru AI Hub</div>
+      <h1 class="page">Design system &amp; component style guide</h1>
+      <p class="lede">The buildable design language for the Accru AI Hub — a governed catalogue of AI apps, agents, skills, prompts and training for the group's firms across Norway, Sweden, Denmark and the UK. Editorial, warm, and considered: an app store made by people who understand accounting, not an internal SharePoint with a new logo.</p>
+      <div class="grid cols-3" style="margin-top:var(--space-6)">
+        <div class="card pad"><h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.95rem">Serif on cream</h4><p class="caption">Gelasio headings on a cream canvas (never white) is the whole brand argument — editorial and trustworthy.</p></div>
+        <div class="card pad"><h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.95rem">Orange acts, red structures</h4><p class="caption">Orange owns action; deep red owns structure. Neither is decoration.</p></div>
+        <div class="card pad"><h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.95rem">WCAG 2.2 AA</h4><p class="caption">A workplace tool in four countries. Accessibility is a legal requirement, treated as craft.</p></div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="color">
+      <div class="eyebrow">Foundation</div>
+      <h2>Color</h2>
+      <p class="sub">Bright <code>--brand-orange</code> fails AA as text or a small control (~3.4:1), so functional orange is the darker <code>--action #b8501c</code>. Bright orange is reserved for display text ≥24px, decoration, and chart fills.</p>
+      <div class="grid cols-4">
+        <div class="swatch"><div class="chip" style="background:#e8e4db"></div><div class="meta"><b>Canvas</b><span class="hex">#e8e4db</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#ffffff"></div><div class="meta"><b>Surface</b><span class="hex">#ffffff</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#dfdad0"></div><div class="meta"><b>Surface sunken</b><span class="hex">#dfdad0</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#d5cfc2"></div><div class="meta"><b>Rule</b><span class="hex">#d5cfc2</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#722322"></div><div class="meta"><b>Brand red</b><span class="hex">#722322</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#dc6834"></div><div class="meta"><b>Brand orange</b><span class="hex">#dc6834 · display/decor</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#b8501c"></div><div class="meta"><b>Action</b><span class="hex">#b8501c · functional</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#8c3d16"></div><div class="meta"><b>Action press</b><span class="hex">#8c3d16</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#2b2523"></div><div class="meta"><b>Ink</b><span class="hex">#2b2523</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#6f6659"></div><div class="meta"><b>Ink muted</b><span class="hex">#6f6659</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#a04a3a"></div><div class="meta"><b>Tint red</b><span class="hex">#a04a3a</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#e89468"></div><div class="meta"><b>Tint orange</b><span class="hex">#e89468</span></div></div>
+      </div>
+      <h3>Semantic</h3>
+      <div class="grid cols-4">
+        <div class="swatch"><div class="chip" style="background:#3d6b4a"></div><div class="meta"><b>Success</b><span class="hex">#3d6b4a on #e6ece6</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#8a6a1f"></div><div class="meta"><b>Warning / degraded</b><span class="hex">#8a6a1f on #f0e9d6</span></div></div>
+        <div class="swatch"><div class="chip" style="background:#8f2f2b"></div><div class="meta"><b>Danger / rejected</b><span class="hex">#8f2f2b on #f2e2e0</span></div></div>
+        <div class="swatch"><div class="chip" style="background:rgba(184,80,28,.12)"></div><div class="meta"><b>Info / new</b><span class="hex">--action @ 12%</span></div></div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="type">
+      <div class="eyebrow">Foundation</div>
+      <h2>Typography</h2>
+      <p class="sub">Gelasio (headings) · Raleway (body &amp; UI) · JetBrains Mono (prompt/config only). Serif-floor rule: Gelasio only ≥18px and never for numbers, inputs, or table cells — those are Raleway. All figures are tabular.</p>
+      <div class="card pad">
+        <div class="ts-row"><span class="tag num">2.25rem / 36</span><span class="samp" style="font-size:2.25rem;letter-spacing:-.01em">AI Hub</span></div>
+        <div class="ts-row"><span class="tag num">1.75rem / 28</span><span class="samp" style="font-size:1.75rem;letter-spacing:-.01em">Good morning, Sarah</span></div>
+        <div class="ts-row"><span class="tag num">1.375rem / 22</span><span class="samp" style="font-size:1.375rem">Recommended for you</span></div>
+        <div class="ts-row"><span class="tag num">1.125rem / 18</span><span class="samp" style="font-size:1.125rem">Bank Reconciliation Assistant</span></div>
+        <div class="ts-row"><span class="tag num">1rem / 16</span><span style="font-size:1rem">Body &amp; UI base — Raleway. Matches bank lines to ledger entries.</span></div>
+        <div class="ts-row"><span class="tag num">0.875rem / 14</span><span style="font-size:.875rem;color:var(--ink-muted)">Secondary text and metadata</span></div>
+        <div class="ts-row" style="border-bottom:0"><span class="tag num">0.75rem / 12</span><span class="badge k-app">APP · caption</span></div>
+      </div>
+      <p class="caption">Measure: body capped ~68ch; asset description column ≤640px.</p>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="spacing">
+      <div class="eyebrow">Foundation</div>
+      <h2>Spacing &amp; grid</h2>
+      <p class="sub">One 4px ramp used everywhere. Grid: 1280px max, 12 columns, 24px gutters. Card grid: <code>repeat(auto-fill, minmax(280px, 1fr))</code>. Breakpoints 600 / 900 / 1120 / 1280.</p>
+      <div class="card pad">
+        <div class="sp-row"><span class="num" style="width:130px">--space-1 · 4px</span><div class="sp-bar" style="width:4px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-2 · 8px</span><div class="sp-bar" style="width:8px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-3 · 12px</span><div class="sp-bar" style="width:12px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-4 · 16px</span><div class="sp-bar" style="width:16px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-5 · 24px</span><div class="sp-bar" style="width:24px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-6 · 32px</span><div class="sp-bar" style="width:32px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-7 · 48px</span><div class="sp-bar" style="width:48px"></div></div>
+        <div class="sp-row"><span class="num" style="width:130px">--space-8 · 64px</span><div class="sp-bar" style="width:64px"></div></div>
+        <div class="sp-row" style="margin-bottom:0"><span class="num" style="width:130px">--space-9 · 80px</span><div class="sp-bar" style="width:80px"></div></div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="elevation">
+      <div class="eyebrow">Foundation</div>
+      <h2>Elevation</h2>
+      <p class="sub">A small, disciplined ladder. Cards are grounded; they lift, they never float. Every card keeps its 1px rule regardless of shadow.</p>
+      <div class="grid cols-4">
+        <div><div class="elev" style="box-shadow:var(--e0)">--e0 · rest</div></div>
+        <div><div class="elev" style="box-shadow:var(--e1)">--e1 · card</div></div>
+        <div><div class="elev" style="box-shadow:var(--e2)">--e2 · hover / popover</div></div>
+        <div><div class="elev" style="box-shadow:var(--e3)">--e3 · modal / palette</div></div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="motion">
+      <div class="eyebrow">Foundation</div>
+      <h2>Motion</h2>
+      <p class="sub">Restrained and named. <code>--dur-fast 120ms</code> / <code>--dur-base 180ms</code> / <code>--dur-slow 240ms</code>, <code>--ease-out cubic-bezier(.2,0,0,1)</code>. Nothing loops; nothing moves without a user action. Honours <code>prefers-reduced-motion</code>.</p>
+      <button class="btn btn-secondary" id="motionBtn"><i class="ph ph-caret-down"></i>&nbsp; Open a panel (base · ease-out)</button>
+      <div class="drawer card" id="drawer" style="margin-top:12px"><div class="pad">This drawer opens over <code>--dur-base</code> with a 4–8px rise and fade — the same motion the scope panel and dropdowns use.</div></div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="icons">
+      <div class="eyebrow">Foundation</div>
+      <h2>Iconography</h2>
+      <p class="sub">Phosphor Icons (regular), 20px default. Country flags via flag-icons. No emoji as UI. Icons paired with labels for anything actionable.</p>
+      <div class="card pad" style="font-size:1.5rem; color:var(--ink); display:flex; gap:20px; flex-wrap:wrap; align-items:center">
+        <i class="ph ph-squares-four"></i><i class="ph ph-star"></i><i class="ph ph-magnifying-glass"></i><i class="ph ph-flag"></i>
+        <i class="ph ph-shield-check"></i><i class="ph ph-graduation-cap"></i><i class="ph ph-upload-simple"></i><i class="ph ph-bookmark-simple"></i>
+        <span style="width:1px;height:26px;background:var(--rule)"></span>
+        <span class="fi fi-no"></span><span class="fi fi-se"></span><span class="fi fi-dk"></span><span class="fi fi-gb"></span>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="buttons">
+      <div class="eyebrow">Components</div>
+      <h2>Buttons &amp; links</h2>
+      <p class="sub">White-on-<code>--action</code> passes AA. Links use <code>--action</code> + underline (colour is never the only signal). Tab to any control to see the two-tone focus ring.</p>
+      <div class="card pad kbd-row" style="align-items:center">
+        <button class="btn btn-primary">Open app</button>
+        <button class="btn btn-secondary"><i class="ph ph-bookmark-simple"></i>&nbsp; Save</button>
+        <button class="btn btn-ghost"><i class="ph ph-flag"></i>&nbsp; Report an issue</button>
+        <button class="btn btn-primary" disabled>Disabled</button>
+        <a href="#buttons">A text link</a>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="scope">
+      <div class="eyebrow">Signature pattern</div>
+      <h2>Scope bar</h2>
+      <p class="sub">Country and category live in the shell on every screen — how an accounting group thinks. Country is a single-select origin filter (five options); default is <b>All countries</b>. It is a lens, never a wall. Click a control to open it.</p>
+      <div class="scopebar">
+        <span class="scope-lbl">Country</span>
+        <div class="selectish" data-menu>
+          <button type="button"><span id="cLbl">All countries</span> <i class="ph ph-caret-down"></i></button>
+          <div class="menu">
+            <button class="sel" data-c>All countries</button>
+            <button data-c>Made in the UK</button>
+            <button data-c>Made in Norway</button>
+            <button data-c>Made in Sweden</button>
+            <button data-c>Made in Denmark</button>
+          </div>
+        </div>
+        <span class="scope-lbl">Category</span>
+        <div class="selectish" data-menu>
+          <button type="button"><span id="catLbl">All</span> <i class="ph ph-caret-down"></i></button>
+          <div class="menu">
+            <button class="sel" data-cat>All <span class="c">128</span></button>
+            <button data-cat>Accounting <span class="c">34</span></button>
+            <button data-cat>Auditing <span class="c">19</span></button>
+            <button class="zero" data-cat>Payroll <span class="c">0</span></button>
+            <button data-cat>VAT / MVA <span class="c">7</span></button>
+            <button data-cat>Year-end <span class="c">12</span></button>
+            <button data-cat>Client comms <span class="c">23</span></button>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Counts are always shown, including zeros — a <code>(0)</code> category is a visible build backlog, not a dead end.</p>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="components">
+      <div class="eyebrow">Components</div>
+      <h2>Building blocks</h2>
+      <div class="grid cols-2">
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Kind badges</h4>
+          <div class="tag-list">
+            <span class="badge k-app">App</span><span class="badge k-agent">Agent</span>
+            <span class="badge k-skill">Skill</span><span class="badge k-prompt">Prompt</span>
+            <span class="badge k-training">Training</span>
+          </div>
+        </div>
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Country chips</h4>
+          <div class="tag-list">
+            <span class="chip"><span class="fi fi-no"></span> Made in Norway</span>
+            <span class="chip"><span class="fi fi-gb"></span> Made in the UK</span>
+            <span class="chip">Bookkeeping</span><span class="chip">Tripletex</span>
+          </div>
+        </div>
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Health &amp; review status</h4>
+          <div class="tag-list" style="align-items:center">
+            <span class="health"><span class="dot d-ok"></span> Healthy</span>
+            <span class="health"><span class="dot d-warn"></span> Degraded</span>
+            <span class="health"><span class="dot d-down"></span> Down</span>
+            <span class="pill p-ok"><i class="ph ph-check"></i> Approved</span>
+            <span class="pill p-warn">Changes</span>
+            <span class="pill p-down">Rejected</span>
+          </div>
+        </div>
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Search / command palette</h4>
+          <div class="search"><i class="ph ph-magnifying-glass"></i><input placeholder="Search assets, people, actions…"/><span class="k">⌘K</span></div>
+        </div>
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Facet filter</h4>
+          <div class="facet">
+            <label><span><input type="checkbox" checked/>App</span><span class="c">42</span></label>
+            <label><span><input type="checkbox"/>Prompt</span><span class="c">31</span></label>
+            <label><span><input type="checkbox"/>Skill</span><span class="c">18</span></label>
+          </div>
+        </div>
+        <div class="card pad">
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Value report</h4>
+          <p class="caption" style="margin-top:0">Did this save you time today?</p>
+          <div class="kbd-row"><button class="btn btn-secondary">~5 min</button><button class="btn btn-secondary">~20 min</button><button class="btn btn-secondary">an hour+</button></div>
+        </div>
+      </div>
+
+      <h3>Data &amp; compliance panel</h3>
+      <p class="sub">Public on every asset — an auditor's answer in three seconds, not three emails.</p>
+      <div class="dp" style="max-width:420px">
+        <div class="hd">Data &amp; compliance</div>
+        <div class="row"><span class="lbl">Client data</span><span class="val">Yes</span></div>
+        <div class="row"><span class="lbl">Personal data</span><span class="val">No</span></div>
+        <div class="row"><span class="lbl">Model</span><span class="val">Claude Sonnet</span></div>
+        <div class="row"><span class="lbl">Processed in</span><span class="val">EU (Norway)</span></div>
+        <div class="row"><span class="lbl">Human review</span><span class="val">Required</span></div>
+        <div class="row"><span class="lbl">Last reviewed</span><span class="val num">12 Jun 2026</span></div>
+        <div class="row"><span class="lbl">Next review due</span><span class="val num">12 Jun 2027</span></div>
+      </div>
+
+      <h3>Empty state</h3>
+      <div class="card pad" style="text-align:center">
+        <i class="ph ph-compass" style="font-size:2rem;color:var(--ink-muted)"></i>
+        <h4 style="font-family:Gelasio;color:var(--brand-red);font-size:1.25rem;margin:10px 0 6px">Nothing in Payroll made in the UK yet.</h4>
+        <p class="caption" style="max-width:52ch;margin:0 auto 14px">There are <b class="num">12</b> payroll assets elsewhere in the group — 8 in Norway, 4 in Sweden. Most payroll logic is country-specific, but the patterns transfer.</p>
+        <div class="kbd-row" style="justify-content:center"><button class="btn btn-primary">Show all countries</button><button class="btn btn-secondary">Submit the first UK one</button></div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="assetcard">
+      <div class="eyebrow">Moment of truth</div>
+      <h2>Asset card</h2>
+      <p class="sub">The unit of the catalogue. Hover to see the lift (<code>--e2</code> + 2px) and title underline. Author byline is first-class. A degraded card is muted and sinks in ranking.</p>
+      <div class="grid cols-3">
+        <div class="asset">
+          <div class="a-top"><span class="badge k-app">App</span><span class="a-rate"><i class="ph ph-star-fill"></i> <span class="num">4.6 (23)</span></span></div>
+          <div class="a-title">Bank Reconciliation Assistant</div>
+          <div class="a-sum">Matches bank lines to ledger entries and flags what it can't explain.</div>
+          <div class="a-meta"><span class="chip"><span class="fi fi-no"></span> Made in Norway</span><span class="chip">Bookkeeping</span><span class="chip">Tripletex</span></div>
+          <div class="a-foot"><span class="by">By <b>M. Ibrekk</b> ⬥ · Accru Bergen</span><span class="num">340 uses · </span><span class="health"><span class="dot d-ok"></span> Healthy</span></div>
+        </div>
+        <div class="asset">
+          <div class="a-top"><span class="badge k-prompt">Prompt</span><span class="a-rate"><i class="ph ph-star-fill"></i> <span class="num">4.2 (11)</span></span></div>
+          <div class="a-title">Client Chase Email Drafter</div>
+          <div class="a-sum">Turns a list of missing documents into a warm, firm follow-up email.</div>
+          <div class="a-meta"><span class="chip"><span class="fi fi-gb"></span> Made in the UK</span><span class="chip">Client comms</span></div>
+          <div class="a-foot"><span class="by">By <b>S. Whitfield</b> ⬥ · Accru Manchester</span><span class="num">128 uses</span></div>
+        </div>
+        <div class="asset degraded">
+          <div class="a-top"><span class="badge k-agent">Agent</span><span class="a-rate"><i class="ph ph-star-fill"></i> <span class="num">3.9 (7)</span></span></div>
+          <div class="a-title">VAT Return Drafter</div>
+          <div class="a-sum">Prepares a first-pass VAT return from ledger exports for review.</div>
+          <div class="a-meta"><span class="chip"><span class="fi fi-se"></span> Made in Sweden</span><span class="chip">VAT / MVA</span></div>
+          <div class="a-foot"><span class="by">By <b>J. Debessay</b> · Accru Malmö</span><span class="health"><span class="dot d-warn"></span> Degraded — checking</span></div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="dataviz">
+      <div class="eyebrow">Analytics</div>
+      <h2>Data visualization</h2>
+      <p class="sub">A brand-derived palette. Never colour alone — always paired with labels. Tabular figures throughout.</p>
+      <h3 style="margin-top:var(--space-4)">Categorical</h3>
+      <div class="dv-scale">
+        <span style="background:#722322">#722322</span><span style="background:#dc6834">#dc6834</span>
+        <span style="background:#3d6b4a">#3d6b4a</span><span style="background:#6f6659">#6f6659</span>
+        <span style="background:#a04a3a">#a04a3a</span><span style="background:#e89468;color:#5a2b12">#e89468</span>
+      </div>
+      <div class="grid cols-2" style="margin-top:var(--space-6)">
+        <div>
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Assets by country of origin</h4>
+          <div class="bars">
+            <div class="bar" style="height:70%;background:#722322"><span>NO 41</span></div>
+            <div class="bar" style="height:48%;background:#dc6834"><span>UK 28</span></div>
+            <div class="bar" style="height:40%;background:#3d6b4a"><span>SE 23</span></div>
+            <div class="bar" style="height:26%;background:#6f6659"><span>DK 15</span></div>
+          </div>
+        </div>
+        <div>
+          <h4 style="color:var(--ink);font-family:Raleway;font-weight:700;font-size:.9rem;margin-bottom:12px">Adoption funnel</h4>
+          <div class="funnel">
+            <div class="seg" style="background:#722322;width:100%">Discovered · <span class="num">2,040</span></div>
+            <div class="seg" style="background:#a04a3a;width:74%">Launched · <span class="num">1,510</span></div>
+            <div class="seg" style="background:#dc6834;width:41%">Adopted · <span class="num">840</span></div>
+            <div class="seg" style="background:#e89468;width:22%;color:#5a2b12">Value realised · <span class="num">450</span></div>
+          </div>
+        </div>
+      </div>
+      <p class="caption">Source: illustrative sample data · funnel = discovered → launched → adopted → value realised.</p>
+    </section>
+
+    <hr class="hr"/>
+
+    <section id="a11y">
+      <div class="eyebrow">Non-negotiable</div>
+      <h2>Accessibility &amp; trust</h2>
+      <div class="note"><b>WCAG 2.2 AA</b> is a legal requirement in all four countries and is treated as craft, not compliance.</div>
+      <ul class="sub" style="margin-top:var(--space-4);line-height:1.7">
+        <li>Functional orange is <code>--action #b8501c</code>; bright <code>#dc6834</code> only ≥24px or decorative.</li>
+        <li>Two-tone <code>:focus-visible</code> ring — tab through this page to see it. Passes the 3:1 non-text rule.</li>
+        <li>Colour is never the only signal — health, ratings and charts all carry a label or icon.</li>
+        <li>Hit targets ≥44×44px; command palette and submission wizard fully keyboard-operable.</li>
+        <li>One date format everywhere: <span class="num">12 Jun 2026</span> (no ambiguous 06/12 across countries).</li>
+        <li>Motion honours <code>prefers-reduced-motion</code>.</li>
+      </ul>
+      <p class="caption">This style guide is a living reference for the v0.3 spec. Full detail lives in the <a href="../accru-ai-hub-ux-spec.md">UX &amp; interface spec</a> and <a href="../accru-ai-hub-technical-architecture.md">technical architecture</a>.</p>
+    </section>
+  </main>
+</div>
+
+<script>
+  // Scrollspy for the rail nav
+  const links = Array.from(document.querySelectorAll('#nav a'));
+  const map = {};
+  links.forEach(a => { const id = a.getAttribute('href').slice(1); const el = document.getElementById(id); if (el) map[id] = a; });
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        if (map[e.target.id]) map[e.target.id].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+  Object.keys(map).forEach(id => obs.observe(document.getElementById(id)));
+
+  // Motion demo
+  const mb = document.getElementById('motionBtn'), dr = document.getElementById('drawer');
+  mb.addEventListener('click', () => dr.classList.toggle('open'));
+
+  // Scope dropdowns
+  document.querySelectorAll('[data-menu]').forEach(m => {
+    const trigger = m.querySelector('button');
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      document.querySelectorAll('[data-menu]').forEach(o => { if (o !== m) o.classList.remove('open'); });
+      m.classList.toggle('open');
+    });
+    m.querySelectorAll('.menu button').forEach(opt => {
+      opt.addEventListener('click', () => {
+        m.querySelectorAll('.menu button').forEach(b => b.classList.remove('sel'));
+        opt.classList.add('sel');
+        const label = opt.childNodes[0].textContent.trim();
+        const target = m.querySelector('#cLbl') || m.querySelector('#catLbl');
+        if (target) target.textContent = label;
+        m.classList.remove('open');
+      });
+    });
+  });
+  document.addEventListener('click', () => document.querySelectorAll('[data-menu]').forEach(m => m.classList.remove('open')));
+</script>
+</body>
+</html>
