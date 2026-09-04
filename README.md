@@ -6,11 +6,15 @@ It is deliberately **model- and vendor-agnostic**: build tools like Riff and Cla
 
 This repository holds the product specifications and an interactive design style guide for developer and stakeholder handoff.
 
-## Interactive style guide (live)
+## Interactive prototypes (live)
 
-**→ https://cwvedvik.github.io/accru-ai-hub/**
+**Style guide → https://cwvedvik.github.io/accru-ai-hub/**
 
 A live, buildless style guide rendering the real Accru brand tokens, typography, components, and patterns (v0.3). Tab through it to see the accessible focus treatment; click the scope-bar controls to see the signature pattern in action.
+
+**Usage dashboard → https://cwvedvik.github.io/accru-ai-hub/usage-dashboard.html**
+
+An interactive design prototype of the AI usage, spend and adoption dashboard, with Claude as the first data source. Switch persona in the top right to move between the group console (Head of AI), a member firm's own view, and an individual employee's view — the nav and scope controls change with the role. Every panel carries a "Data source and behaviour" disclosure naming the Claude Analytics endpoint behind it, and the **Handoff notes** page holds the URL contract, metric definitions, refresh cadence and attribution rules. All data is invented for design review.
 
 ## Specifications
 
@@ -28,6 +32,10 @@ accru-ai-hub/
 ├── accru-ai-hub-technical-architecture.md # technical architecture specification
 └── docs/                                  # GitHub Pages site (source: main / docs)
     ├── index.html                         # interactive style guide
+    ├── usage-dashboard.html               # usage & adoption dashboard prototype
+    ├── usage-dashboard.data.js            # seeded mock data + endpoint provenance
+    ├── usage-dashboard.views.js           # screen renderers
+    ├── usage-dashboard.app.js             # chart theme, scope/URL state, controls
     └── .nojekyll                          # serve files as-is (no Jekyll build)
 ```
 
@@ -36,12 +44,15 @@ accru-ai-hub/
 The style guide is a single self-contained HTML file — no build step required.
 
 ```bash
-# either just open it
+# either just open them
 open docs/index.html
+open docs/usage-dashboard.html
 
-# or serve it (fonts/icons load from CDN)
+# or serve them (fonts, icons and the chart library load from CDN)
 npx serve docs
 ```
+
+Both pages are plain static files with no build step. The dashboard splits its JavaScript across three classic scripts (no ES modules) specifically so it still runs when opened straight from disk.
 
 ## Notes for maintainers
 
