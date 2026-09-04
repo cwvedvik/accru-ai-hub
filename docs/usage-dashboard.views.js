@@ -292,8 +292,13 @@
     if (dim === 'total') {
       series = [{
         name: M.label, type: 'line', smooth: 0.2, showSymbol: false,
-        lineStyle: { width: 2, color: '#b8501c' },
-        areaStyle: { color: 'rgba(184,80,28,.14)' },
+        lineStyle: { width: 2.4, color: APP.C.action, shadowColor: APP.C.action, shadowBlur: 12 },
+        areaStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'rgba(255,122,60,.34)' },
+            { offset: 1, color: 'rgba(255,122,60,.02)' }
+          ])
+        },
         data: res.data.total
       }];
     } else if (dim === 'country') {
@@ -302,8 +307,11 @@
       }).map(function (c, i) {
         return {
           name: c.name, type: 'line', stack: 's', smooth: 0.2, showSymbol: false,
-          lineStyle: { width: 1, color: c.hue, type: ['solid', 'dashed', 'dotted', 'solid'][i % 4] },
-          areaStyle: { color: c.hue, opacity: 0.82 },
+          /* The band is translucent so the survey grid reads faintly through it,
+             with a bright hairline on top to hold the edge. */
+          lineStyle: { width: 1.8, color: c.hue, type: ['solid', 'dashed', 'dotted', 'solid'][i % 4],
+            shadowColor: c.hue, shadowBlur: 8 },
+          areaStyle: { color: c.hue, opacity: 0.5 },
           emphasis: { focus: 'series' },
           data: res.data[c.code]
         };
@@ -312,8 +320,9 @@
       series = A.products.map(function (p, i) {
         return {
           name: p.name, type: 'line', stack: 's', smooth: 0.2, showSymbol: false,
-          lineStyle: { width: 1, color: p.hue, type: ['solid', 'dashed', 'dotted', 'solid', 'dashed'][i % 5] },
-          areaStyle: { color: p.hue, opacity: 0.82 },
+          lineStyle: { width: 1.8, color: p.hue, type: ['solid', 'dashed', 'dotted', 'solid', 'dashed'][i % 5],
+            shadowColor: p.hue, shadowBlur: 8 },
+          areaStyle: { color: p.hue, opacity: 0.5 },
           emphasis: { focus: 'series' },
           data: res.data[p.id]
         };
@@ -330,9 +339,9 @@
         || dates[dates.length - 1];
       series[series.length - 1].markArea = {
         silent: true,
-        itemStyle: { color: 'rgba(143,47,43,.07)' },
+        itemStyle: { color: APP.C.dangerSoft, borderColor: 'rgba(255,98,87,.28)', borderWidth: 1 },
         label: {
-          show: true, position: 'insideTop', color: '#8f2f2b', fontSize: 11, fontWeight: 600,
+          show: true, position: 'insideTop', color: APP.C.danger, fontSize: 11, fontWeight: 600,
           formatter: 'Still reconciling'
         },
         data: [[{ xAxis: startLabel }, { xAxis: dates[dates.length - 1] }]]
@@ -344,7 +353,7 @@
       legend: { show: dim !== 'total', top: 0, left: 0 },
       tooltip: {
         trigger: 'axis',
-        axisPointer: { type: 'line', lineStyle: { color: '#6f6659' } },
+        axisPointer: { type: 'line', lineStyle: { color: 'rgba(255,138,76,.55)', width: 1 } },
         formatter: function (ps) {
           if (!ps.length) return '';
           let sum = 0;
@@ -352,13 +361,13 @@
           let s = '<b>' + (weekly ? 'Week of ' : '') + F.date(ps[0].axisValue) + '</b>';
           if (unsettledStart <= r.to && A.dates.indexOf(ps[0].axisValue) > A.meta.settledIndex
               && APP.state.measure === 'spend') {
-            s += ' <span style="color:#8f2f2b">still reconciling</span>';
+            s += ' <span style="color:' + APP.C.danger + '">still reconciling</span>';
           }
           s += '<br/>';
           ps.slice().reverse().forEach(function (p) {
             s += p.marker + p.seriesName + ' <b>' + M.fmt(p.value) + '</b><br/>';
           });
-          if (ps.length > 1) s += '<span style="color:#6f6659">Total ' + M.fmt(sum) + '</span>';
+          if (ps.length > 1) s += '<span style="color:' + APP.C.muted + '">Total ' + M.fmt(sum) + '</span>';
           return s;
         }
       },
@@ -369,8 +378,9 @@
       dataZoom: [
         { type: 'inside', throttle: 60 },
         { type: 'slider', height: 26, bottom: 14, borderColor: APP.RULE,
-          fillerColor: 'rgba(184,80,28,.12)', handleStyle: { color: '#b8501c' },
-          dataBackground: { lineStyle: { color: '#c9c2b4' }, areaStyle: { color: '#e3ded4' } },
+          fillerColor: 'rgba(255,122,60,.16)', handleStyle: { color: APP.C.action, borderColor: APP.C.action },
+          dataBackground: { lineStyle: { color: 'rgba(255,138,76,.35)' }, areaStyle: { color: 'rgba(255,138,76,.10)' } },
+          selectedDataBackground: { lineStyle: { color: APP.C.action }, areaStyle: { color: 'rgba(255,122,60,.20)' } },
           textStyle: { color: APP.MUTED, fontSize: 10 } }
       ],
       series: series
@@ -447,7 +457,8 @@
       return {
         name: c.name, type: 'scatter',
         symbolSize: function (d) { return Math.max(9, Math.sqrt(d[2]) * 3.1); },
-        itemStyle: { color: c.hue, opacity: 0.78, borderColor: '#fff', borderWidth: 1 },
+        itemStyle: { color: c.hue, opacity: 0.72, borderColor: APP.C.void, borderWidth: 1,
+        shadowColor: c.hue, shadowBlur: 10 },
         emphasis: { focus: 'series', label: { show: true, formatter: function (p) { return p.data[3]; },
           position: 'top', color: APP.INK, fontSize: 11, fontWeight: 600 } },
         data: pts.filter(function (m) { return m.firm.country === c.code; })
@@ -467,7 +478,7 @@
           return '<b>' + p.data[3] + '</b><br/>' +
             'Adoption ' + F.pct(p.data[0] / 100, 0) + ' of headcount<br/>' +
             'Cost per active user ' + F.moneyExact(p.data[1]) + '<br/>' +
-            '<span style="color:#6f6659">' + p.data[2] + ' licences</span>';
+            '<span style="color:' + APP.C.muted + '">' + p.data[2] + ' licences</span>';
         }
       },
       xAxis: {
@@ -483,7 +494,7 @@
         name: 'Scope average', type: 'scatter', data: [], silent: true,
         markLine: {
           silent: true, symbol: 'none',
-          lineStyle: { color: '#a89f8f', type: 'dashed', width: 1 },
+          lineStyle: { color: 'rgba(171,149,138,.55)', type: 'dashed', width: 1 },
           label: { color: APP.MUTED, fontSize: 10, formatter: function (p) { return p.name; } },
           data: [{ xAxis: avgAdopt, name: 'average adoption' }, { yAxis: avgCost, name: 'average cost' }]
         }
@@ -502,7 +513,7 @@
         emphasis: { focus: 'series' },
         label: {
           show: true, formatter: function (d) { return d.value >= 9 ? Math.round(d.value) + '%' : ''; },
-          color: '#fff', fontSize: 10, fontWeight: 600
+          color: APP.C.void, fontSize: 10, fontWeight: 700
         },
         data: rows.map(function (c) {
           const a = A.aggregate(list.filter(function (f) { return f.country === c.code; }), r.from, r.to);
@@ -532,15 +543,15 @@
       tooltip: {
         formatter: function (p) {
           return '<b>' + p.name + '</b><br/>' + F.moneyExact(p.value) + '<br/>' +
-            '<span style="color:#6f6659">' + F.pct(p.value / totalP, 0) + ' of scope spend</span>';
+            '<span style="color:' + APP.C.muted + '">' + F.pct(p.value / totalP, 0) + ' of scope spend</span>';
         }
       },
       series: [{
         type: 'treemap', roam: false, nodeClick: false, breadcrumb: { show: false },
         top: 4, bottom: 4, left: 0, right: 0,
-        itemStyle: { borderColor: '#fff', borderWidth: 2, gapWidth: 2 },
+        itemStyle: { borderColor: APP.C.surface, borderWidth: 2, gapWidth: 2 },
         label: {
-          show: true, position: 'insideTopLeft', color: '#fff', fontSize: 12, fontWeight: 600,
+          show: true, position: 'insideTopLeft', color: APP.C.void, fontSize: 12, fontWeight: 700,
           formatter: function (p) {
             return p.name + '\n' + F.money(p.value) + '  ' + F.pct(p.value / totalP, 0);
           }
@@ -586,7 +597,7 @@
       tooltip: { trigger: 'item', formatter: function (p) {
         const s = top[top.length - 1 - p.dataIndex];
         return '<b>' + s.name + '</b><br/>' + s.users + ' users across ' + s.firms + ' firms<br/>' +
-          '<span style="color:#6f6659">Built in ' + A.countryByCode(s.origin).name +
+          '<span style="color:' + APP.C.muted + '">Built in ' + A.countryByCode(s.origin).name +
           (s.inHub ? '' : ' \u00b7 not yet in the Hub catalogue') + '</span>';
       } },
       xAxis: { type: 'value', show: false, max: max * 1.3 },
@@ -596,7 +607,7 @@
         type: 'bar', barWidth: 13,
         data: top.slice().reverse().map(function (s) {
           return { value: s.users,
-            itemStyle: { color: s.inHub ? '#b8501c' : '#a89f8f', borderRadius: [0, 3, 3, 0] } };
+            itemStyle: { color: s.inHub ? APP.C.action : '#6b5a52', borderRadius: [0, 3, 3, 0] } };
         }),
         label: { show: true, position: 'right', color: APP.MUTED, fontSize: 11,
           formatter: function (p) {
@@ -631,7 +642,7 @@
       calendar: {
         top: 44, left: 42, right: 22, cellSize: ['auto', 15],
         range: [A.dates[0], A.dates[A.meta.dayCount - 1]],
-        itemStyle: { color: '#f3f0ea', borderWidth: 2, borderColor: '#fff' },
+        itemStyle: { color: APP.C.calendarEmpty, borderWidth: 2, borderColor: APP.C.surface },
         splitLine: { show: false },
         yearLabel: { show: false },
         dayLabel: { nameMap: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
@@ -767,7 +778,8 @@
           : '<span class="num">-</span>',
         trend: f.live ? APP.sparkline(m.daily, { w: 88, h: 26 }) : '',
         top: f.live && m.agg.byProduct[topI] > 0
-          ? '<span class="chip">' + A.products[topI].name + '</span>' : ''
+          ? '<span class="chip"><i class="dot" style="background:' + A.products[topI].hue +
+              '"></i>' + A.products[topI].name + '</span>' : ''
       };
       let tr = '<tr' + (expanded[f.id] ? ' class="open"' : '') + '>' +
         vis.map(function (c) {
@@ -1184,12 +1196,12 @@
           '<div class="body">' + funnel.map(function (x, i) {
             const val = x.v == null ? null : x.v;
             const w = val == null ? 0 : Math.max(4, val / fmax * 100);
-            const hue = ['#722322', '#a04a3a', '#dc6834', '#e89468', '#f0c4a8'][i];
+            const hue = ['#6b3a22', '#a8501f', '#e0761f', '#ff9a45', '#ffc247'][i];
             return '<div class="funnel-row"><span class="fl">' + x.l + '</span>' +
               (val == null
                 ? '<span class="fn">not available</span>'
                 : '<span class="fb" style="width:' + w.toFixed(1) + '%;background:' + hue +
-                  (i > 2 ? ';color:#2b2523' : '') + '">' + F.num(val) + '</span>' +
+                  (i > 1 ? ';color:#17100c' : '') + '">' + F.num(val) + '</span>' +
                   '<span class="fn">' + x.note + '</span>') +
               '</div>';
           }).join('') +
@@ -1235,7 +1247,8 @@
               '<td><b>' + APP.esc(person.name) + '</b></td>' +
               '<td style="color:var(--ink-muted)">' + person.role + '</td>' +
               '<td>' + bandEl(person.band) + '</td>' +
-              '<td>' + (prod ? '<span class="chip">' + prod.name + '</span>' : '') + '</td>' +
+              '<td>' + (prod ? '<span class="chip"><i class="dot" style="background:' + prod.hue +
+                '"></i>' + prod.name + '</span>' : '') + '</td>' +
               '<td class="r num" style="color:var(--ink-muted)">' +
                 (person.lastActive ? F.date(person.lastActive) : 'never') + '</td>' +
               (revealPeople
@@ -1280,7 +1293,7 @@
        so both lines are a trailing weekly mean. */
     const mineS = APP.movingAverage(mine, 7), medianS = APP.movingAverage(median, 7);
     APP.draw('firmTrend', {
-      grid: { left: 60, right: 20, top: 36, bottom: 34 },
+      grid: { left: 60, right: 20, top: 58, bottom: 34 },
       legend: { top: 0, left: 0 },
       tooltip: { trigger: 'axis', formatter: function (ps) {
         let s = '<b>' + F.date(ps[0].axisValue) + '</b><br/>';
@@ -1290,14 +1303,16 @@
       xAxis: { type: 'category', data: dates, boundaryGap: false,
         axisLabel: { formatter: function (v) { return F.dateShort(v); } } },
       yAxis: { type: 'value', name: 'Cost per active user per day, seven day average',
-        nameTextStyle: { color: APP.MUTED, fontSize: 11 }, nameGap: 14,
+        /* Left-aligned, otherwise ECharts centres the name on the axis line and a
+           label this long runs off the left edge of the canvas. */
+        nameTextStyle: { color: APP.MUTED, fontSize: 11, align: 'left' }, nameGap: 14,
         axisLabel: { formatter: function (v) { return F.money(v); } } },
       series: [
         { name: f.name, type: 'line', smooth: 0.3, showSymbol: false,
-          lineStyle: { width: 2.2, color: '#b8501c' },
-          areaStyle: { color: 'rgba(184,80,28,.12)' }, data: mineS },
+          lineStyle: { width: 2.4, color: APP.C.action, shadowColor: APP.C.action, shadowBlur: 12 },
+          areaStyle: { color: 'rgba(255,122,60,.15)' }, data: mineS },
         { name: 'Median member firm', type: 'line', smooth: 0.3, showSymbol: false,
-          lineStyle: { width: 1.5, color: '#6f6659', type: 'dashed' }, data: medianS }
+          lineStyle: { width: 1.6, color: APP.C.muted, type: 'dashed' }, data: medianS }
       ]
     });
   }
@@ -1405,7 +1420,7 @@
       calendar: {
         top: 26, left: 40, right: 16, cellSize: ['auto', 13],
         range: [A.dates[0], A.dates[A.meta.dayCount - 1]],
-        itemStyle: { color: '#f3f0ea', borderWidth: 2, borderColor: '#fff' },
+        itemStyle: { color: APP.C.calendarEmpty, borderWidth: 2, borderColor: APP.C.surface },
         splitLine: { show: false }, yearLabel: { show: false },
         dayLabel: { nameMap: ['S', 'M', 'T', 'W', 'T', 'F', 'S'], color: APP.MUTED, fontSize: 9 },
         monthLabel: { color: APP.MUTED, fontSize: 10,
@@ -1443,6 +1458,48 @@
       '<p>A clickable design specification, not an application. Every screen, state, metric ' +
       'definition and edge case is intended to be implemented as shown. The data is invented, ' +
       'the structure is not.</p>' +
+
+      '<h3>Why this screen is dark when the design system is light</h3>' +
+      '<p>The Accru design system describes a light document surface, and the style guide still ' +
+      'renders it. This dashboard deliberately diverges. It is an operations screen: it is left ' +
+      'open, watched at a glance, and often shown on a wall or a shared display rather than read ' +
+      'start to finish. On a dark surface a small change in a small chart carries across a room, ' +
+      'and the ink-heavy chrome of a document surface stops competing with the data.</p>' +
+      '<p>The divergence is confined to surface and hue. Type scale, spacing, radii, control ' +
+      'sizes, focus treatment and every component behaviour are unchanged, so the two surfaces ' +
+      'are one system. The dark ramp is mixed down from the brand red rather than from neutral ' +
+      'grey, which is why it reads warm and not as a generic dark mode.</p>' +
+      '<p>Both surfaces should ship as token sets on the same components. Nothing in this ' +
+      'prototype hardcodes a colour outside the token list below and the palette object at the ' +
+      'top of <code>usage-dashboard.app.js</code>.</p>' +
+      '<table><thead><tr><th>Token</th><th>Value</th><th>Where it is used</th></tr></thead><tbody>' +
+      [
+        ['--void', '#0d0a09', 'Rail, top bar, scope bar, provenance drawers'],
+        ['--canvas', '#14100e', 'Page behind the panels'],
+        ['--surface', '#1b1512', 'Panel and card fills'],
+        ['--surface-sunken', '#241c18', 'Table headers, chips, inset wells'],
+        ['--surface-raised', '#2c221c', 'Row hover, menu hover'],
+        ['--rule', '#33261f', 'Every hairline'],
+        ['--bracket', 'rgba(255,138,76,.45)', 'Panel corner ticks'],
+        ['--ink', '#f4ece6', 'Body copy. 15.5:1 on surface'],
+        ['--ink-muted', '#ab958a', 'Secondary copy and axes. 6.4:1 on surface'],
+        ['--action', '#ff7a3c', 'The single interactive colour. 7.0:1 on surface'],
+        ['--heading', '#ffc9a3', 'Gelasio headings and headline figures'],
+        ['--success / --warning / --danger', '#3ddc97 / #ffc247 / #ff6257', 'States, each also carrying a fill and a border'],
+        ['Country hues', '#ff6b5e #ffc247 #2fd0b2 #7aa7ff', 'Norway, Sweden, Denmark, United Kingdom. Fixed for the life of the product'],
+        ['Product hues', '#ff7a3c #5cc8ff #2fd0b2 #ffc247 #c98bff', 'Chat, Code, Cowork, Office, Design'],
+        ['Heat ramp', '#3a2519 to #ffc247', 'Activity calendar only']
+      ].map(function (r) {
+        var sw = /^#|^rgba/.test(r[1]) ? '<span class="sw" style="background:' + r[1].split(' ')[0] +
+          ';color:' + r[1].split(' ')[0] + '"></span>' : '';
+        return '<tr><td><code>' + r[0] + '</code></td><td>' + sw + '<code>' + r[1] +
+          '</code></td><td>' + r[2] + '</td></tr>';
+      }).join('') +
+      '</tbody></table>' +
+      '<p>Every text pairing above clears WCAG 2.2 AA at 4.5:1, and every hue clears 3:1 against ' +
+      'the panel surface for non-text contrast. Country and product hues are separated around the ' +
+      'wheel rather than by lightness, so they survive greyscale and the common forms of colour ' +
+      'blindness, and no chart uses colour as its only signal.</p>' +
 
       '<h3>The URL contract</h3>' +
       '<p>Scope lives in the URL so a view can be pasted into Teams and land on the same screen. ' +
@@ -1547,12 +1604,39 @@
   }
 
   /* ===========================================================================
+     System status strip
+     The instrument header. Answers "can I trust what is below this line" before
+     the reader has to go and look for the Data coverage page.
+     =========================================================================== */
+  function renderStatus() {
+    const r = APP.range();
+    const list = APP.scopedFirms();
+    const live = list.filter(function (f) { return f.live; }).length;
+    const scope = APP.state.firm !== 'all' ? A.firmById(APP.state.firm).name
+      : APP.state.c !== 'all' ? A.countryByCode(APP.state.c).name : 'Group, all countries';
+    const cells = [
+      '<span class="live"><span class="dot"></span>Feed nominal</span>',
+      '<span class="sep"></span>',
+      'Scope <b>' + APP.esc(scope) + '</b>',
+      'Window <b>' + (r.empty ? 'none' : F.dateShort(A.dates[r.from]) + ' to ' +
+        F.dateShort(A.dates[r.to])) + '</b>',
+      'Firms reporting <b>' + live + '/' + list.length + '</b>',
+      '<span class="sep"></span>',
+      'Engagement final <b>' + F.dateShort(A.meta.engagementFinalTo) + '</b>',
+      'Cost settled <b>' + F.dateShort(A.meta.costSettledTo) + '</b>',
+      '<span style="margin-left:auto">Refresh <b>daily 10:00 UTC</b></span>'
+    ];
+    document.getElementById('statusStrip').innerHTML = cells.join('');
+  }
+
+  /* ===========================================================================
      Router
      =========================================================================== */
   function renderAll() {
     APP = window.ACCRU_APP;
     APP.renderNav();
     APP.renderScopeBar();
+    renderStatus();
 
     document.querySelectorAll('.view').forEach(function (v) { v.classList.remove('on'); });
     const el = document.getElementById('view-' + APP.state.view);

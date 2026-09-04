@@ -92,31 +92,36 @@
   /* ---------------------------------------------------------------------------
      Reference dimensions
      --------------------------------------------------------------------------- */
+  /* Country hues are fixed for the life of the product so the eye learns them.
+     They are tuned for a dark surface: high luminance, and separated around the
+     wheel rather than by lightness alone, so they survive greyscale printing and
+     the common forms of colour blindness. Mirrored as CSS custom properties in
+     the stylesheet, since some legends are drawn in HTML and some on canvas. */
   const COUNTRIES = [
-    { code: 'NO', name: 'Norway',         hue: '#722322', flag: 'no' },
-    { code: 'SE', name: 'Sweden',         hue: '#dc6834', flag: 'se' },
-    { code: 'DK', name: 'Denmark',        hue: '#3d6b4a', flag: 'dk' },
-    { code: 'UK', name: 'United Kingdom', hue: '#6f6659', flag: 'gb' }
+    { code: 'NO', name: 'Norway',         hue: '#ff6b5e', flag: 'no' },
+    { code: 'SE', name: 'Sweden',         hue: '#ffc247', flag: 'se' },
+    { code: 'DK', name: 'Denmark',        hue: '#2fd0b2', flag: 'dk' },
+    { code: 'UK', name: 'United Kingdom', hue: '#7aa7ff', flag: 'gb' }
   ];
 
   /* Per-product daily cost per active user, in USD, before firm intensity.
      share is the fraction of a firm's active users who touch that product on a
      given day. Claude Code reaches few people but costs the most per head. */
   const PRODUCTS = [
-    { id: 'chat',   name: 'Claude chat', hue: '#722322', rate: 2.28, share: 0.94 },
-    { id: 'code',   name: 'Claude Code', hue: '#dc6834', rate: 6.00, share: 0.21 },
-    { id: 'cowork', name: 'Cowork',      hue: '#3d6b4a', rate: 2.00, share: 0.34 },
-    { id: 'office', name: 'Office',      hue: '#6f6659', rate: 1.22, share: 0.47 },
-    { id: 'design', name: 'Design',      hue: '#a04a3a', rate: 2.05, share: 0.11 }
+    { id: 'chat',   name: 'Claude chat', hue: '#ff7a3c', rate: 2.28, share: 0.94 },
+    { id: 'code',   name: 'Claude Code', hue: '#5cc8ff', rate: 6.00, share: 0.21 },
+    { id: 'cowork', name: 'Cowork',      hue: '#2fd0b2', rate: 2.00, share: 0.34 },
+    { id: 'office', name: 'Office',      hue: '#ffc247', rate: 1.22, share: 0.47 },
+    { id: 'design', name: 'Design',      hue: '#c98bff', rate: 2.05, share: 0.11 }
   ];
   const P = PRODUCTS.length;
 
   /* Model mix is reported per product by /analytics/cost_report.
      Code leans on Opus, everyday chat leans on Sonnet, batch work on Haiku. */
   const MODELS = [
-    { id: 'opus',   name: 'Opus 4.6',   hue: '#722322', mix: [0.21, 0.58, 0.24, 0.09, 0.31] },
-    { id: 'sonnet', name: 'Sonnet 4.6', hue: '#dc6834', mix: [0.66, 0.37, 0.62, 0.58, 0.61] },
-    { id: 'haiku',  name: 'Haiku 4.5',  hue: '#3d6b4a', mix: [0.13, 0.05, 0.14, 0.33, 0.08] }
+    { id: 'opus',   name: 'Opus 4.6',   hue: '#ff7a3c', mix: [0.21, 0.58, 0.24, 0.09, 0.31] },
+    { id: 'sonnet', name: 'Sonnet 4.6', hue: '#5cc8ff', mix: [0.66, 0.37, 0.62, 0.58, 0.61] },
+    { id: 'haiku',  name: 'Haiku 4.5',  hue: '#2fd0b2', mix: [0.13, 0.05, 0.14, 0.33, 0.08] }
   ];
 
   /* ---------------------------------------------------------------------------

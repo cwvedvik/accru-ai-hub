@@ -14,7 +14,9 @@ A live, buildless style guide rendering the real Accru brand tokens, typography,
 
 **Usage dashboard → https://cwvedvik.github.io/accru-ai-hub/usage-dashboard.html**
 
-An interactive design prototype of the AI usage, spend and adoption dashboard, with Claude as the first data source. Switch persona in the top right to move between the group console (Head of AI), a member firm's own view, and an individual employee's view — the nav and scope controls change with the role. Every panel carries a "Data source and behaviour" disclosure naming the Claude Analytics endpoint behind it, and the **Handoff notes** page holds the URL contract, metric definitions, refresh cadence and attribution rules. All data is invented for design review.
+An interactive design prototype of the AI usage, spend and adoption dashboard, with Claude as the first data source. Switch persona in the top right to move between the group console (Head of AI), a member firm's own view, and an individual employee's view; the nav and scope controls change with the role. Every panel carries a "Data source and behaviour" disclosure naming the Claude Analytics endpoint behind it, and the **Handoff notes** page holds the URL contract, metric definitions, refresh cadence and attribution rules. All data is invented for design review.
+
+This screen runs on a dark command surface rather than the light document surface of the style guide. That is a deliberate divergence, argued in full on the Handoff notes page: it is an operations screen, left open and watched at a glance, often on a shared display. The divergence is confined to surface and hue. Type scale, spacing, radii, control sizes, focus treatment and component behaviour are unchanged, the dark ramp is mixed down from the brand red rather than from neutral grey, and every pairing clears WCAG 2.2 AA.
 
 ## Specifications
 

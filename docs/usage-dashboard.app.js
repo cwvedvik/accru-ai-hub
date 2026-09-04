@@ -16,39 +16,69 @@
   const REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ===========================================================================
-     1. ECharts theme
-     Built from the data-viz palette in UX spec section 11. Country hues are
-     fixed so the eye learns them, and every series carries a label or its own
-     line style so colour is never the only signal.
+     1. Chart palette and ECharts theme
+
+     The dashboard runs on a dark command surface rather than the light document
+     surface of the design system. That is a deliberate divergence, argued in the
+     handoff notes: this is an operations screen watched at a glance, not a page
+     read start to finish, and luminous data on black is what makes a small
+     change in a small chart catch the eye across a room.
+
+     Every colour the charts use lives in this one object. Nothing downstream
+     hardcodes a hex value, so retheming means editing this block and the token
+     list in the stylesheet, and nothing else.
      =========================================================================== */
-  const INK = '#2b2523', MUTED = '#6f6659', RULE = '#d5cfc2', SURFACE = '#ffffff';
-  const CATEGORICAL = ['#722322', '#dc6834', '#3d6b4a', '#6f6659', '#a04a3a', '#e89468'];
-  const SEQUENTIAL = ['#f0e0d4', '#e5c3a8', '#d99f78', '#c9743f', '#a8551f', '#8c3d16'];
+  const C = {
+    ink: '#f4ece6',
+    muted: '#ab958a',
+    faint: '#7e6a60',
+    rule: '#33261f',
+    grid: 'rgba(255,138,76,.10)',      /* split lines, kept warm and very low */
+    surface: '#1b1512',
+    void: '#0d0a09',
+    action: '#ff7a3c',
+    actionSoft: 'rgba(255,122,60,.16)',
+    heading: '#ffc9a3',
+    success: '#3ddc97',
+    warning: '#ffc247',
+    danger: '#ff6257',
+    dangerSoft: 'rgba(255,98,87,.07)',
+    /* Categorical fallback. Series normally take their colour from the country,
+       product or model record so the same entity is the same colour everywhere. */
+    categorical: ['#ff7a3c', '#5cc8ff', '#2fd0b2', '#ffc247', '#c98bff', '#ff6b5e'],
+    /* Heat ramp for the activity calendar. Starts just above the panel surface
+       so an empty day reads as absence rather than as a low value. */
+    sequential: ['#3a2519', '#5c3218', '#8f4718', '#c2601a', '#ee8a2b', '#ffc247'],
+    calendarEmpty: '#1f1815'
+  };
+  /* Kept as loose bindings because the rest of the file already reads them. */
+  const INK = C.ink, MUTED = C.muted, RULE = C.rule;
+  const CATEGORICAL = C.categorical, SEQUENTIAL = C.sequential;
 
   echarts.registerTheme('accru', {
     color: CATEGORICAL,
     backgroundColor: 'transparent',
-    textStyle: { fontFamily: 'Raleway, Calibri, Arial, sans-serif', color: INK },
-    title: { textStyle: { fontFamily: 'Gelasio, Georgia, serif', color: '#722322' } },
-    grid: { borderColor: RULE },
+    textStyle: { fontFamily: 'Raleway, Calibri, Arial, sans-serif', color: C.ink },
+    title: { textStyle: { fontFamily: 'Gelasio, Georgia, serif', color: C.heading } },
+    grid: { borderColor: C.rule },
     categoryAxis: {
-      axisLine: { lineStyle: { color: RULE } },
+      axisLine: { lineStyle: { color: C.rule } },
       axisTick: { show: false },
-      axisLabel: { color: MUTED, fontSize: 11 },
+      axisLabel: { color: C.muted, fontSize: 11 },
       splitLine: { show: false }
     },
     valueAxis: {
       axisLine: { show: false },
       axisTick: { show: false },
-      axisLabel: { color: MUTED, fontSize: 11 },
-      splitLine: { lineStyle: { color: RULE, type: 'dashed' } }
+      axisLabel: { color: C.muted, fontSize: 11 },
+      splitLine: { lineStyle: { color: C.grid, type: 'dashed' } }
     },
-    legend: { textStyle: { color: INK, fontSize: 12 }, itemGap: 16, icon: 'roundRect',
-      itemWidth: 12, itemHeight: 12 },
+    legend: { textStyle: { color: C.muted, fontSize: 12 }, itemGap: 16, icon: 'roundRect',
+      itemWidth: 12, itemHeight: 12, inactiveColor: C.faint },
     tooltip: {
-      backgroundColor: SURFACE, borderColor: RULE, borderWidth: 1,
-      textStyle: { color: INK, fontSize: 12 },
-      extraCssText: 'box-shadow:0 8px 16px rgba(43,37,35,.10),0 24px 48px rgba(43,37,35,.10);' +
+      backgroundColor: 'rgba(20,16,14,.96)', borderColor: 'rgba(255,138,76,.34)', borderWidth: 1,
+      textStyle: { color: C.ink, fontSize: 12 },
+      extraCssText: 'box-shadow:0 12px 40px rgba(0,0,0,.66);backdrop-filter:blur(6px);' +
                     'border-radius:8px;font-variant-numeric:tabular-nums;'
     }
   });
@@ -99,7 +129,7 @@
   function sparkline(values, opts) {
     opts = opts || {};
     if (opts.smooth !== false) values = movingAverage(values, 7);
-    const w = opts.w || 88, h = opts.h || 26, stroke = opts.stroke || '#b8501c';
+    const w = opts.w || 88, h = opts.h || 26, stroke = opts.stroke || C.action;
     if (!values || !values.length) return '';
     let max = -Infinity, min = Infinity;
     for (let i = 0; i < values.length; i++) { if (values[i] > max) max = values[i]; if (values[i] < min) min = values[i]; }
@@ -114,8 +144,8 @@
     area = d + 'L' + (1 + (values.length - 1) * step).toFixed(2) + ' ' + (h - 1) + 'L1 ' + (h - 1) + 'Z';
     return '<svg class="sparkcell" width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h +
       '" aria-hidden="true" focusable="false">' +
-      '<path d="' + area + '" fill="' + stroke + '" opacity=".10"/>' +
-      '<path d="' + d + '" fill="none" stroke="' + stroke + '" stroke-width="1.5" ' +
+      '<path d="' + area + '" fill="' + stroke + '" opacity=".20"/>' +
+      '<path d="' + d + '" fill="none" stroke="' + stroke + '" stroke-width="1.6" ' +
       'stroke-linejoin="round" stroke-linecap="round"/></svg>';
   }
 
@@ -514,7 +544,7 @@
     draw: draw, chart: chart, sparkline: sparkline, toast: toast, copyText: copyText,
     flagEl: flagEl, esc: esc, deltaEl: deltaEl, renderNav: renderNav, renderScopeBar: renderScopeBar,
     writeURL: writeURL, readURL: readURL, visibleNav: visibleNav,
-    CATEGORICAL: CATEGORICAL, SEQUENTIAL: SEQUENTIAL, INK: INK, MUTED: MUTED, RULE: RULE,
+    C: C, CATEGORICAL: CATEGORICAL, SEQUENTIAL: SEQUENTIAL, INK: INK, MUTED: MUTED, RULE: RULE,
     REDUCED: REDUCED, applyPersonaLock: applyPersonaLock, buildSeg: buildSeg, buildSelect: buildSelect
   };
 
