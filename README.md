@@ -38,6 +38,7 @@ accru-ai-hub/
     ├── usage-dashboard.data.js            # seeded mock data + endpoint provenance
     ├── usage-dashboard.views.js           # screen renderers
     ├── usage-dashboard.app.js             # chart theme, scope/URL state, controls
+    ├── accru-logo.svg                     # the Accru Partners mark, exactly as supplied
     └── .nojekyll                          # serve files as-is (no Jekyll build)
 ```
 

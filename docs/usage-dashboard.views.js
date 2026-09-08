@@ -1488,7 +1488,9 @@
         ['--success / --warning / --danger', '#3ddc97 / #ffc247 / #ff6257', 'States, each also carrying a fill and a border'],
         ['Country hues', '#ff6b5e #ffc247 #2fd0b2 #7aa7ff', 'Norway, Sweden, Denmark, United Kingdom. Fixed for the life of the product'],
         ['Product hues', '#ff7a3c #5cc8ff #2fd0b2 #ffc247 #c98bff', 'Chat, Code, Cowork, Office, Design'],
-        ['Heat ramp', '#3a2519 to #ffc247', 'Activity calendar only']
+        ['Heat ramp', '#3a2519 to #ffc247', 'Activity calendar only'],
+        ['--logo-word', '#f4ece6', 'Reversed Accru wordmark in the rail'],
+        ['--logo-accent', '#ff7a3c', 'The dot in the counter and the word "partners"']
       ].map(function (r) {
         var sw = /^#|^rgba/.test(r[1]) ? '<span class="sw" style="background:' + r[1].split(' ')[0] +
           ';color:' + r[1].split(' ')[0] + '"></span>' : '';
@@ -1496,6 +1498,18 @@
           '</code></td><td>' + r[2] + '</td></tr>';
       }).join('') +
       '</tbody></table>' +
+      '<h3>The logo on a dark surface</h3>' +
+      '<p>The Accru Partners mark ships in brand red <code>#722322</code> with a ' +
+      '<code>#dc6834</code> accent. That is the correct pairing on cream and unusable here: the ' +
+      'red wordmark measures 1.9:1 against the rail, which is not legible. The rail therefore ' +
+      'carries the reversed variant, which is the standard light-on-dark treatment: the wordmark ' +
+      'takes <code>--logo-word</code> and the dot in the counter and the word "partners" take ' +
+      '<code>--logo-accent</code>. Geometry, proportions and clear space are untouched.</p>' +
+      '<p>The mark is inlined in the page rather than referenced as an image, so the two colours ' +
+      'come from the token block and the reversal cannot drift from the palette. The original ' +
+      'file sits at <code>docs/accru-logo.svg</code> exactly as supplied, and is what should be ' +
+      'used anywhere the surface is light. Do not place the native mark on a dark background.</p>' +
+
       '<p>Every text pairing above clears WCAG 2.2 AA at 4.5:1, and every hue clears 3:1 against ' +
       'the panel surface for non-text contrast. Country and product hues are separated around the ' +
       'wheel rather than by lightness, so they survive greyscale and the common forms of colour ' +
