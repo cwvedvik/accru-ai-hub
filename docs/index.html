@@ -61,20 +61,36 @@
 
   /* ---------- Shell ---------- */
   .shell{display:grid; grid-template-columns:248px minmax(0,1fr); min-height:100vh;}
+  /* The rail shares the page canvas rather than sitting on a slab of brand red,
+     separated by a hairline instead of a block of colour. This is what lets the
+     logo sit here untouched: the mark is brand red, so on a red rail it was
+     1.00:1 and simply disappeared. On the canvas it reads at 8.36:1. */
   .rail{
     position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
-    background:var(--brand-red); color:#f3e7df; padding:var(--space-5) var(--space-4);
+    background:var(--canvas); color:var(--ink); padding:var(--space-5) var(--space-4);
+    border-right:1px solid var(--rule);
   }
-  .rail .brand{display:flex; align-items:baseline; gap:8px; margin-bottom:var(--space-2);}
-  .rail .brand b{font-family:"Gelasio",serif; color:#fff; font-weight:600; font-size:1.05rem;}
-  .rail .brand span{font-size:.7rem; letter-spacing:.14em; text-transform:uppercase; color:#e6b9a6;}
-  .rail .ver{font-size:.72rem; color:#e0a892; margin-bottom:var(--space-5); letter-spacing:.02em;}
-  .rail nav a{display:block; color:#f0dcd2; text-decoration:none; font-size:.9rem;
+  /* Mark on its own line with clear space, then a hairline, so the product name
+     reads as a separate line of the lockup and not as a third word in the logo. */
+  .rail .brand{display:block;}
+  .rail .brand .mark{display:block; width:104px; height:40px;}
+  .rail .brand span{display:block; font-size:.7rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--ink); font-weight:600;
+    margin-top:var(--space-4); padding-top:var(--space-3); border-top:1px solid var(--rule);}
+  .rail .ver{font-size:.72rem; color:var(--ink-muted); margin:var(--space-1) 0 var(--space-5);
+    letter-spacing:.02em;}
+  .rail nav a{display:block; color:var(--brand-red); text-decoration:none; font-size:.9rem;
     padding:7px 10px; border-radius:var(--r-control); margin-bottom:2px; transition:background var(--dur-fast) var(--ease-out);}
-  .rail nav a:hover{background:rgba(255,255,255,.08); color:#fff;}
-  .rail nav a.active{background:rgba(255,255,255,.14); color:#fff; box-shadow:inset 3px 0 0 var(--brand-orange);}
-  .rail .foot{margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid rgba(255,255,255,.15); font-size:.78rem; color:#e0a892;}
-  .rail .foot a{color:#f6d9cb;}
+  .rail nav a:hover{background:rgba(114,35,34,.08);}
+  /* The 3px bar was bright orange, which is 2.73:1 on cream and fails the 3:1
+     non-text rule for a state indicator. Brand red carries it at 8.36:1, and the
+     tint and the weight repeat the signal so it never rests on colour alone. */
+  .rail nav a.active{background:rgba(114,35,34,.10); font-weight:600;
+    box-shadow:inset 3px 0 0 var(--brand-red);}
+  .rail .foot{margin-top:var(--space-6); padding-top:var(--space-4); border-top:1px solid var(--rule); font-size:.78rem; color:var(--ink-muted);}
+  /* Red rather than the global --action link colour: it matches the nav above it,
+     and --action is only 3.94:1 on the cream canvas where it clears 5:1 on white. */
+  .rail .foot a{color:var(--brand-red);}
 
   main{padding:var(--space-7) var(--space-7); max-width:1120px;}
   section{margin-bottom:var(--space-9); scroll-margin-top:var(--space-5);}
@@ -92,7 +108,11 @@
   .cols-2{grid-template-columns:repeat(2,1fr);} .cols-3{grid-template-columns:repeat(3,1fr);}
   .cols-4{grid-template-columns:repeat(4,1fr);}
   @media(max-width:900px){.cols-2,.cols-3,.cols-4{grid-template-columns:1fr 1fr;}}
-  @media(max-width:600px){.shell{grid-template-columns:1fr;} .rail{position:static;height:auto;} main{padding:var(--space-5);} .cols-2,.cols-3,.cols-4{grid-template-columns:1fr;}}
+  /* Stacked, so the separating hairline moves to the bottom edge. Colour no
+     longer does this job now that the rail shares the canvas. */
+  @media(max-width:600px){.shell{grid-template-columns:1fr;}
+    .rail{position:static; height:auto; border-right:0; border-bottom:1px solid var(--rule);}
+    main{padding:var(--space-5);} .cols-2,.cols-3,.cols-4{grid-template-columns:1fr;}}
 
   /* Swatches */
   .swatch{border:1px solid var(--rule); border-radius:var(--r-card); overflow:hidden; background:var(--surface);}
@@ -230,7 +250,13 @@
 <body>
 <div class="shell">
   <aside class="rail on-canvas">
-    <div class="brand"><b>accru</b><span>AI Hub</span></div>
+    <div class="brand">
+      <!-- The supplied asset, unmodified. This surface is cream, so the mark
+           needs no reversal; the dashboard's dark rail carries a reversed
+           variant of the same file. -->
+      <img class="mark" src="accru-logo.svg" alt="Accru Partners" width="104" height="40" />
+      <span>AI Hub</span>
+    </div>
     <div class="ver">Design System · v0.3</div>
     <nav id="nav">
       <a href="#overview">Overview</a>

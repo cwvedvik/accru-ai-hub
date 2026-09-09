@@ -1474,8 +1474,8 @@
       'top of <code>usage-dashboard.app.js</code>.</p>' +
       '<table><thead><tr><th>Token</th><th>Value</th><th>Where it is used</th></tr></thead><tbody>' +
       [
-        ['--void', '#0d0a09', 'Rail, top bar, scope bar, provenance drawers'],
-        ['--canvas', '#14100e', 'Page behind the panels'],
+        ['--void', '#0d0a09', 'Recessed wells only: provenance drawers, table sub-rows, legend and freshness strips'],
+        ['--canvas', '#14100e', 'The whole working surface. Rail, top bar, scope bar and page all share it'],
         ['--surface', '#1b1512', 'Panel and card fills'],
         ['--surface-sunken', '#241c18', 'Table headers, chips, inset wells'],
         ['--surface-raised', '#2c221c', 'Row hover, menu hover'],
@@ -1507,8 +1507,10 @@
       '<code>--logo-accent</code>. Geometry, proportions and clear space are untouched.</p>' +
       '<p>The mark is inlined in the page rather than referenced as an image, so the two colours ' +
       'come from the token block and the reversal cannot drift from the palette. The original ' +
-      'file sits at <code>docs/accru-logo.svg</code> exactly as supplied, and is what should be ' +
-      'used anywhere the surface is light. Do not place the native mark on a dark background.</p>' +
+      'file sits at <code>docs/accru-logo.svg</code> exactly as supplied. Anywhere the surface is ' +
+      'light, reference that file directly and do not recolour it: the style guide does exactly ' +
+      'this, which is the reference implementation for the light case. Never place the native ' +
+      'mark on a dark background.</p>' +
 
       '<p>Every text pairing above clears WCAG 2.2 AA at 4.5:1, and every hue clears 3:1 against ' +
       'the panel surface for non-text contrast. Country and product hues are separated around the ' +

@@ -97,8 +97,10 @@
   /* Micro-label. Monospaced small caps, the standard instrument annotation. */
   .ml{font-family:var(--mono); font-size:.66rem; letter-spacing:.13em; text-transform:uppercase;
     color:var(--ink-muted); font-weight:500;}
+  /* The inner ring is the background it sits on, so the outer ring reads as a
+     ring and not as a thick blur. The rail is now the canvas too, so one rule
+     covers the whole page and the old .on-canvas override is gone. */
   :focus-visible{outline:none; box-shadow:0 0 0 2px var(--canvas), 0 0 0 4px var(--action);}
-  .on-canvas :focus-visible{box-shadow:0 0 0 2px var(--void), 0 0 0 4px var(--action);}
   .sr{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
     clip:rect(0 0 0 0); white-space:nowrap; border:0;}
   .skip{position:absolute; left:-9999px; top:0; z-index:100; background:var(--surface);
@@ -108,9 +110,14 @@
 
   /* ---------- Shell ---------- */
   .shell{display:grid; grid-template-columns:236px minmax(0,1fr); min-height:100vh;}
+  /* The rail shares the page canvas rather than sitting on its own darker slab,
+     so the survey grid runs unbroken across the whole width and a single hairline
+     carries the separation. Transparent rather than var(--canvas) so the grid
+     actually shows through; the rail is its own grid column, so nothing scrolls
+     underneath it. */
   .rail{position:sticky; top:0; align-self:start; height:100vh; overflow-y:auto;
-    background:var(--void); color:var(--ink); padding:var(--space-5) var(--space-4);
-    border-right:1px solid var(--rule); position:sticky;}
+    background:transparent; color:var(--ink); padding:var(--space-5) var(--space-4);
+    border-right:1px solid var(--rule);}
   /* Brand lockup. The mark sits on its own line with clear space around it
      rather than inline with the product name, because the mark is already a
      two-line lockup and crowding it against more type fights its own baseline. */
@@ -143,8 +150,12 @@
   main{min-width:0;}
 
   /* ---------- Top bar and scope bar ---------- */
+  /* Chrome sits on the canvas like the rail, separated by hairlines rather than
+     by a tonal step. The top bar was a shade darker, which at 1.04:1 against the
+     rail was too small to read as a deliberate surface and just looked like a
+     seam. Transparent, so the survey grid carries across the whole header. */
   .topbar{display:flex; align-items:center; gap:var(--space-4); padding:var(--space-4) var(--space-6);
-    background:var(--void); border-bottom:1px solid var(--rule); flex-wrap:wrap;}
+    background:transparent; border-bottom:1px solid var(--rule); flex-wrap:wrap;}
   .search{display:flex; align-items:center; gap:10px; background:var(--surface);
     border:1px solid var(--rule); border-radius:var(--r-control); padding:0 12px; height:44px;
     flex:1; max-width:420px;}
@@ -160,7 +171,8 @@
     text-transform:uppercase; color:var(--ink-muted);}
 
   .scopebar{display:flex; gap:var(--space-4); align-items:center; flex-wrap:wrap;
-    padding:var(--space-3) var(--space-6); background:var(--void);
+    /* Opaque, unlike the top bar: this one sticks and panels scroll under it. */
+    padding:var(--space-3) var(--space-6); background:var(--canvas);
     border-bottom:1px solid var(--rule); position:sticky; top:0; z-index:30;}
   .scope-lbl{font-family:var(--mono); font-size:.66rem; letter-spacing:.12em;
     text-transform:uppercase; color:var(--ink-muted); margin-right:2px;}
@@ -493,7 +505,11 @@
     .cov{grid-template-columns:1fr;} .cov-item{border-right:0;}
     .wl-row,.rollup-row{grid-template-columns:1fr 1fr; row-gap:10px;} }
   @media(max-width:860px){ .shell{grid-template-columns:minmax(0,1fr);}
-    .rail{position:static; height:auto;} .rail nav{display:flex; flex-wrap:wrap; gap:4px;}
+    /* Stacked, so the separating hairline has to move to the bottom edge.
+       Colour no longer does this job now that the rail shares the canvas. */
+    .rail{position:static; height:auto; border-right:0;
+      border-bottom:1px solid var(--rule);}
+    .rail nav{display:flex; flex-wrap:wrap; gap:4px;}
     .rail nav a{flex:1 1 auto; min-width:0;} .page{padding:var(--space-4);}
     .topbar,.scopebar{padding-left:var(--space-4); padding-right:var(--space-4);}
     .search{max-width:none;} .persona{margin-left:0; width:100%;}
@@ -528,7 +544,7 @@
 
 <div class="shell">
   <!-- ===================== Left rail ===================== -->
-  <aside class="rail on-canvas">
+  <aside class="rail">
     <div class="brand">
       <svg class="mark" viewBox="0 0 130 50" role="img" aria-label="Accru Partners" focusable="false">
         <title>Accru Partners</title>
