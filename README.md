@@ -12,6 +12,10 @@ This repository holds the product specifications and an interactive design style
 
 A live, buildless style guide rendering the real Accru brand tokens, typography, components, and patterns (v0.3). Tab through it to see the accessible focus treatment; click the scope-bar controls to see the signature pattern in action.
 
+**Connectors & Agents → https://cwvedvik.github.io/accru-ai-hub/hub.html**
+
+An interactive design prototype of the connector catalogue and agent builder. Employees connect Fortnox (and the other country ledgers) with whatever that product needs — OAuth, client id/secret, or an API key — then copy a streamable MCP URL for Claude, or attach the same connection to an agent on a visual hub canvas. All credentials and URLs are invented for design review; **Handoff notes** records the proposed URL contract.
+
 **Usage dashboard → https://cwvedvik.github.io/accru-ai-hub/usage-dashboard.html**
 
 An interactive design prototype of the AI usage, spend and adoption dashboard, with Claude as the first data source. Switch persona in the top right to move between the group console (Head of AI), a member firm's own view, and an individual employee's view; the nav and scope controls change with the role. Every panel carries a "Data source and behaviour" disclosure naming the Claude Analytics endpoint behind it, and the **Handoff notes** page holds the URL contract, metric definitions, refresh cadence and attribution rules. All data is invented for design review.
@@ -34,6 +38,11 @@ accru-ai-hub/
 ├── accru-ai-hub-technical-architecture.md # technical architecture specification
 └── docs/                                  # GitHub Pages site (source: main / docs)
     ├── index.html                         # interactive style guide
+    ├── hub.html                           # connectors & agent-builder prototype
+    ├── hub.data.js                        # connector catalogue, schemas, mock connections
+    ├── hub.views.js                       # catalogue, setup, MCP URL, hub canvas
+    ├── hub.app.js                         # hash router, connect/attach, copy URL
+    ├── fortnox-logo.svg                   # Fortnox mark used on the Connect Fortnox page
     ├── usage-dashboard.html               # usage & adoption dashboard prototype
     ├── usage-dashboard.data.js            # seeded mock data + endpoint provenance
     ├── usage-dashboard.views.js           # screen renderers
@@ -49,13 +58,14 @@ The style guide is a single self-contained HTML file — no build step required.
 ```bash
 # either just open them
 open docs/index.html
+open docs/hub.html
 open docs/usage-dashboard.html
 
 # or serve them (fonts, icons and the chart library load from CDN)
 npx serve docs
 ```
 
-Both pages are plain static files with no build step. The dashboard splits its JavaScript across three classic scripts (no ES modules) specifically so it still runs when opened straight from disk.
+Both the style guide and the prototypes are plain static files with no build step. The dashboard and the connectors workspace split their JavaScript across classic scripts (no ES modules) specifically so they still run when opened straight from disk.
 
 ## Notes for maintainers
 
